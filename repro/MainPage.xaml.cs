@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -16,6 +16,14 @@ namespace repro
         public MainPage()
         {
             InitializeComponent();
+        }
+
+        void Button_Clicked(System.Object sender, System.EventArgs e)
+        {
+            var random = new Random();
+            var color = String.Format("#{0:X6}", random.Next(0x1000000));
+            mylabel.TextColor = Color.FromHex(color);
+            mylabel.Text = color;
         }
     }
 }
