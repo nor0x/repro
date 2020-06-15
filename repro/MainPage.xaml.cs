@@ -13,6 +13,9 @@ namespace repro
     [DesignTimeVisible(false)]
     public partial class MainPage : ContentPage
     {
+
+        public event EventHandler<BoundsEventArgs> ButtonPositionChanged;
+
         public MainPage()
         {
             InitializeComponent();
@@ -20,10 +23,30 @@ namespace repro
 
         void Button_Clicked(System.Object sender, System.EventArgs e)
         {
-            var random = new Random();
-            var color = String.Format("#{0:X6}", random.Next(0x1000000));
-            mylabel.TextColor = Color.FromHex(color);
-            mylabel.Text = color;
+            var top = Button2.Margin.Top + 70;
+            Button2.Margin = new Thickness(Button2.Margin.Left, top, Button2.Margin.Right, Button2.Margin.Bottom);
+            var newbounds = new Rectangle();
+            ButtonPositionChanged?.Invoke(this, new BoundsEventArgs(newbounds));
+            System.Diagnostics.Debug.WriteLine("Y: " + Button2.Y + " height: " + Button2.Height);
+        }
+
+        void Button_ClickedUp(System.Object sender, System.EventArgs e)
+        {
+            var top = Button2.Margin.Top - 70;
+            Button2.Margin = new Thickness(Button2.Margin.Left, top, Button2.Margin.Right, Button2.Margin.Bottom);
+            var newbounds = new Rectangle();
+            ButtonPositionChanged?.Invoke(this, new BoundsEventArgs(newbounds));
+            System.Diagnostics.Debug.WriteLine("Y: " + Button2.Y + " height: " + Button2.Height);
+        }
+    }
+
+    public class BoundsEventArgs : EventArgs
+    {
+        public Rectangle Bounds { get; set; }
+
+        public BoundsEventArgs(Rectangle r)
+        {
+            Bounds = r;
         }
     }
 }
